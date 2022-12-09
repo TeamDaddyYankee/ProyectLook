@@ -7,6 +7,7 @@ class LoginScreen extends StatefulWidget {
   BuildContext contexto;
   State<LoginScreen> createState() => LoginScreenState();
   LoginScreen(this.contexto);
+  LoginScreen.only();
 }
 
 class LoginScreenState extends State<LoginScreen> {
@@ -52,7 +53,8 @@ class LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     // Crea un widget Form usando el _formKey que creamos anteriormente
-    return SingleChildScrollView(
+    return Scaffold(
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -68,64 +70,64 @@ class LoginScreenState extends State<LoginScreen> {
                     color: Colors.grey
                 ),
               ),
-
             ),
-           Form(
-             key: keyform_login,
-            child: Container(
-            margin: EdgeInsets.only(top: 10),
-            width:MediaQuery.of(context).size.width * 0.8 ,
-            alignment: Alignment.center,
-            child:Column(
-              children: [
-                _email(),
-                espacio_vertical(10),
-                _password(),
-                espacio_vertical(20),
-                Container(
-                  alignment: Alignment.topRight,
-                  child:InkWell(
-                    child: Text(
-                      "Olvidaste tu contraseña?",
-                      style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          color: Color(0xff6B8B59),
-                          shadows: [
-                            Shadow(
-                                color: Colors.grey,
-                                offset: Offset(0.5,0)
-                            )
-                          ]
-                      ),
-                    ),
-                  ),
-                ),
-                espacio_vertical(20),
-                BottomGreen(50,MediaQuery.of(context).size.width * 0.4,"Iniciar Sesion",loginUser),
-                espacio_vertical(20),
-                Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+            Form(
+                key: keyform_login,
+                child: Container(
+                    margin: EdgeInsets.only(top: 10),
+                    width:MediaQuery.of(context).size.width * 0.8 ,
+                    alignment: Alignment.center,
+                    child:Column(
                       children: [
-                        Text("Aun no tiene una cuenta?"),
-                        InkWell(
-                          child: Text(
-                            "Registrarse",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xff6B8B59)
+                        _email(),
+                        espacio_vertical(10),
+                        _password(),
+                        espacio_vertical(20),
+                        Container(
+                          alignment: Alignment.topRight,
+                          child:InkWell(
+                            child: Text(
+                              "Olvidaste tu contraseña?",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  color: Color(0xff6B8B59),
+                                  shadows: [
+                                    Shadow(
+                                        color: Colors.grey,
+                                        offset: Offset(0.5,0)
+                                    )
+                                  ]
+                              ),
                             ),
                           ),
                         ),
+                        espacio_vertical(20),
+                        BottomGreen(50,MediaQuery.of(context).size.width * 0.4,"Iniciar Sesion",loginUser),
+                        espacio_vertical(20),
+                        Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("Aun no tiene una cuenta?"),
+                                InkWell(
+                                  child: Text(
+                                    "Registrarse",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xff6B8B59)
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                        ),
                       ],
                     )
-                ),
-              ],
-            )
-           ))
+                ))
           ],
         ),
-      );
+      ) ,
+    );
 }
 
 void  loginUser(){

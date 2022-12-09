@@ -7,7 +7,9 @@ import 'package:firebase_flutter/boton_verde.dart';
 class RegisterScreen extends StatefulWidget {
   BuildContext contexto;
   State<RegisterScreen> createState() => RegisterScreenState();
+
   RegisterScreen(this.contexto);
+  RegisterScreen.only();
 }
 
 class RegisterScreenState extends State<RegisterScreen> {
@@ -18,7 +20,7 @@ class RegisterScreenState extends State<RegisterScreen> {
   final firestore=FirebaseFirestore.instance;
   final _keyform = GlobalKey<FormState>();
   bool contra_visible = true;
-
+  BuildContext context_scafold;
 
 
   @override
@@ -31,6 +33,85 @@ class RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    // Crea un widget Form usando el _formKey que creamos anteriormente
+    return Scaffold(
+      body: SizedBox(
+        child: Builder(
+            builder: (BuildContext scaffoldContext){
+              context_scafold=scaffoldContext;
+              return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        child: Image.asset("assets/fondo_look.png"),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top:10,bottom:10),
+                        child:Text("REGISTRO",
+                          style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey
+                          ),
+                        ),
+                      ),
+                      Form(
+                        key: _keyform,
+                        child:Container(
+                          margin: EdgeInsets.only(top: 10),
+                          width:MediaQuery.of(context).size.width * 0.8,
+                          alignment: Alignment.center,
+                          child:Column(
+                            children: [
+                              _usuario(), // TextField usuario
+                              espacio_vertical(10),
+                              _email(), //TextField correo
+                              espacio_vertical(10),
+                              _password(),//TextField password
+                              espacio_vertical(10),
+                              _telefono(), //TextField telefono
+                              terminos(),
+                              espacio_vertical(10),
+                              //Boton
+                              BottomGreen(50,MediaQuery.of(context).size.width * 0.4,"Crear Cuenta",registerUser),
+                              espacio_vertical(20),
+                              Container(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text("Ya tiene una cuenta? "),
+                                      InkWell(
+                                        onTap: (){
+                                          Navigator.pushNamed(context, "login_user");
+                                        },
+                                        child: Text(
+                                          "Iniciar Sesion",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xff6B8B59)
+                                          ),
+                                        ),
+                                      ),
+                                      espacio_vertical(10),
+                                    ],
+                                  )
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+            }
+        )
+      )
+    );
+  }
+
   validarRegistro()async{
     bool valido=false;
     try{
@@ -38,22 +119,22 @@ class RegisterScreenState extends State<RegisterScreen> {
       QuerySnapshot usuarios = await ref.get();
       if(usuarios.docs.length!=0){
         for(var userdoc in usuarios.docs){
-            //Si existe un usuario con el mismo nombre
-            if(userdoc.get("nombreUser")==usuario.text){
-              mensaje(widget.contexto,"El usuario ingresado ya existe");
-              break;
-            }
-            else if(userdoc.get("email")==email.text){
-              mensaje(widget.contexto,"El email ingresado ya existe");
-              break;
-            }
-            else if(userdoc.get("movil")==movil.text){
-              mensaje(widget.contexto,"El numero de celular ingresado ya existe");
-              break;
-            }
-            else{
-              valido=true;
-            }
+          //Si existe un usuario con el mismo nombre
+          if(userdoc.get("nombreUser")==usuario.text){
+            mensaje(context_scafold,"El usuario ingresado ya existe");
+            break;
+          }
+          else if(userdoc.get("email")==email.text){
+            mensaje(context_scafold,"El email ingresado ya existe");
+            break;
+          }
+          else if(userdoc.get("movil")==movil.text){
+            mensaje(context_scafold,"El numero de celular ingresado ya existe");
+            break;
+          }
+          else{
+            valido=true;
+          }
         }
       }
       if(valido){
@@ -74,79 +155,20 @@ class RegisterScreenState extends State<RegisterScreen> {
   }
 
 
-
-  @override
-  Widget build(BuildContext context) {
-    // Crea un widget Form usando el _formKey que creamos anteriormente
-    return SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              child: Image.asset("assets/fondo_look.png"),
-            ),
-            Container(
-              margin: EdgeInsets.only(top:10,bottom:10),
-              child:Text("REGISTRO",
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey
-                ),
-              ),
-            ),
-            Form(
-            key: _keyform,
-            child:Container(
-              margin: EdgeInsets.only(top: 10),
-              width:MediaQuery.of(context).size.width * 0.8,
-              alignment: Alignment.center,
-              child:Column(
-                children: [
-                  _usuario(), // TextField usuario
-                  espacio_vertical(10),
-                  _email(), //TextField correo
-                  espacio_vertical(10),
-                  _password(),//TextField password
-                  espacio_vertical(10),
-                  _telefono(), //TextField telefono
-                  terminos(),
-                  espacio_vertical(10),
-                  //Boton
-                  BottomGreen(50,MediaQuery.of(context).size.width * 0.4,"Crear Cuenta",registerUser),
-                  espacio_vertical(20),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Ya tiene una cuenta? "),
-                        InkWell(
-                            child: Text(
-                              "Iniciar Sesion",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                color: Color(0xff6B8B59)
-                              ),
-                            ),
-                        ),
-                      ],
-                    )
-
-                  ),
-
-                ],
-              ),
-
-
-            ),
-    ),
-
-
-
-          ],
-        ),
-      );
+  void registerUser(){
+    if (_keyform.currentState.validate()){
+      validarRegistro();
+      usuario.clear();
+      email.clear();
+      contra.clear();
+      movil.clear();
+      print("Registrado con Exito");
+      mensaje(context_scafold,"Registrado con exito! Bienvenido!");
+      Navigator.pushNamed(context, "login_user");
+    }
   }
+
+
 
   final alphanumeric = RegExp(r'^[a-zA-Z0-9]+$');
 String validarUsuario(String valor){
@@ -240,13 +262,6 @@ void mensaje(@required BuildContext context,String mensaje){
     backgroundColor:Color(0xff6B8B59),
   );
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-}
-
-void registerUser(){
-  if (_keyform.currentState.validate()){
-    validarRegistro();
-    mensaje(widget.contexto,"Registrado con exito! Bienvenido ${this.usuario.text}!");
-  }
 }
 
 

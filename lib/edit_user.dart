@@ -8,6 +8,7 @@ class EditUserScreen extends StatefulWidget {
   BuildContext contexto;
   State<EditUserScreen> createState() => EditUserScreenState();
   EditUserScreen(this.contexto);
+  EditUserScreen.only();
 }
 
 class EditUserScreenState extends State<EditUserScreen> {
