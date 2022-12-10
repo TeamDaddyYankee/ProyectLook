@@ -5,10 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:firebase_flutter/boton_verde.dart';
 
 class RegisterScreen extends StatefulWidget {
-  BuildContext contexto;
   State<RegisterScreen> createState() => RegisterScreenState();
-  RegisterScreen(this.contexto);
-  RegisterScreen.only();
 }
 
 class RegisterScreenState extends State<RegisterScreen> {

@@ -3,12 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_flutter/boton_verde.dart';
 import 'package:firebase_flutter/edit_user.dart';
+import 'package:firebase_flutter/User.dart';
 
 class LoginScreen extends StatefulWidget {
-  BuildContext contexto;
   State<LoginScreen> createState() => LoginScreenState();
-  LoginScreen(this.contexto);
-  LoginScreen.only();
 }
 
 class LoginScreenState extends State<LoginScreen> {
@@ -18,25 +16,47 @@ class LoginScreenState extends State<LoginScreen> {
   bool contra_visible = true;
   BuildContext context_scaffold;
 
+
   validarLogin()async{
-    bool exist=false;
+    String user_logueado;
+    bool exist_email=false;
+    bool valid_contra=false;
     try{
       CollectionReference ref=FirebaseFirestore.instance.collection("Usuarios");
       QuerySnapshot usuarios = await ref.get();
+      //Si hay usuarios
       if(usuarios.docs.length!=0){
         for(var userdoc in usuarios.docs){
-          //print(userdoc.id);//Key del Documento
-          if(userdoc.get("email") == email.text && userdoc.get("password") == contra.text){
-             exist=true;
-             print("Lectura con exito");
-             //Lo mandas a la interfaz principal
-             break;
+          //Comprobamos si el email existe ,con cada uno de los docs existentes
+          if(userdoc.get("email") == email.text ){
+            exist_email=true;//El email existe en la base de datos
+            //Si el email existe comprobamos su contraseña
+            if(userdoc.get("password") == contra.text){
+              valid_contra=true;//El usuario existe
+              user_logueado=userdoc.id;//Key del Documento
+              break;
+            }
+            else{
+              break;
+            }
           }
+        }//for
+
+        if(exist_email){
+         if(valid_contra){
+           email.clear();
+           contra.clear();
+           Navigator.pushNamed(context,"edit_user",arguments: User(user_logueado));
+         }
+         else{
+           mensaje(context_scaffold,"La contraseña ingresada es incorrecta");
+         }
+        }
+        else{
+          mensaje(context_scaffold,"El email ingresado no existe como registrado");
         }
       }
-      if(!exist){
-        mensaje(context_scaffold,"Los datos ingresados no coinciden con ninguna cuenta");
-      }
+
     }
     catch(e){
         print("Error .... ${e.toString()}");
@@ -147,7 +167,6 @@ void  loginUser(){
   if (keyform_login.currentState.validate()){
     print("Aceptable");
     validarLogin();
-    Navigator.pushNamed(context,"edit_user");
   }
   else{
     print("Error con la validacion");

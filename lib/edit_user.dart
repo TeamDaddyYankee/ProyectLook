@@ -3,9 +3,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_flutter/boton_verde.dart';
+import 'package:firebase_flutter/User.dart';
 
 class EditUserScreen extends StatefulWidget {
+
   State<EditUserScreen> createState() => EditUserScreenState();
+
 }
 
 class EditUserScreenState extends State<EditUserScreen> {
@@ -32,6 +35,7 @@ class EditUserScreenState extends State<EditUserScreen> {
 
   @override
   Widget build(BuildContext context) {
+        final User user_conectado = ModalRoute.of(context).settings.arguments;
         return Scaffold(
             body: SizedBox(
                 child: Builder(
