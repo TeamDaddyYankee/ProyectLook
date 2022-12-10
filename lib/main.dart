@@ -7,6 +7,7 @@ import 'package:firebase_flutter/text_user.dart';
 import 'package:firebase_flutter/incident_register.dart';
 import 'package:firebase_flutter/edit_user.dart';
 
+
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -26,8 +27,8 @@ class MyApp extends StatelessWidget {
       initialRoute: "/"  ,
       routes: {
         "/" : (context) =>  RegisterScreen.only(),
+        "edit_user" : (context) => EditUserScreen(),
         "login_user" : (context) => LoginScreen.only(),
-        "edit_user" : (context) => EditUserScreen.only(),
       },
       //home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );

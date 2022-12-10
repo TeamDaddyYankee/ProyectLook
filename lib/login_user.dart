@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_flutter/boton_verde.dart';
+import 'package:firebase_flutter/edit_user.dart';
 
 class LoginScreen extends StatefulWidget {
   BuildContext contexto;
@@ -15,6 +16,7 @@ class LoginScreenState extends State<LoginScreen> {
   TextEditingController email=TextEditingController();
   final keyform_login = GlobalKey<FormState>();
   bool contra_visible = true;
+  BuildContext context_scaffold;
 
   validarLogin()async{
     bool exist=false;
@@ -33,7 +35,7 @@ class LoginScreenState extends State<LoginScreen> {
         }
       }
       if(!exist){
-        mensaje_exito(widget.contexto,"Los datos ingresados no coinciden con ninguna cuenta");
+        mensaje(context_scaffold,"Los datos ingresados no coinciden con ninguna cuenta");
       }
     }
     catch(e){
@@ -54,95 +56,105 @@ class LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     // Crea un widget Form usando el _formKey que creamos anteriormente
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              child: Image.asset("assets/fondo_look.png"),
-            ),
-            Container(
-              margin: EdgeInsets.only(top:30,bottom: 4),
-              child:Text("INICIO DE SESION",
-                style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey
-                ),
-              ),
-            ),
-            Form(
-                key: keyform_login,
-                child: Container(
-                    margin: EdgeInsets.only(top: 10),
-                    width:MediaQuery.of(context).size.width * 0.8 ,
-                    alignment: Alignment.center,
-                    child:Column(
-                      children: [
-                        _email(),
-                        espacio_vertical(10),
-                        _password(),
-                        espacio_vertical(20),
-                        Container(
-                          alignment: Alignment.topRight,
-                          child:InkWell(
-                            child: Text(
-                              "Olvidaste tu contraseña?",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  color: Color(0xff6B8B59),
-                                  shadows: [
-                                    Shadow(
-                                        color: Colors.grey,
-                                        offset: Offset(0.5,0)
-                                    )
-                                  ]
-                              ),
-                            ),
-                          ),
+      body: SizedBox(
+        child: Builder(
+            builder: (BuildContext scaffoldcontext){
+              context_scaffold=scaffoldcontext;
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      child: Image.asset("assets/fondo_look.png"),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top:30,bottom: 4),
+                      child:Text("INICIO DE SESION",
+                        style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey
                         ),
-                        espacio_vertical(20),
-                        BottomGreen(50,MediaQuery.of(context).size.width * 0.4,"Iniciar Sesion",loginUser),
-                        espacio_vertical(20),
-                        Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                      ),
+                    ),
+                    Form(
+                        key: keyform_login,
+                        child: Container(
+                            margin: EdgeInsets.only(top: 10),
+                            width:MediaQuery.of(context).size.width * 0.8 ,
+                            alignment: Alignment.center,
+                            child:Column(
                               children: [
-                                Text("Aun no tiene una cuenta?"),
-                                InkWell(
-                                  child: Text(
-                                    "Registrarse",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xff6B8B59)
+                                _email(),
+                                espacio_vertical(10),
+                                _password(),
+                                espacio_vertical(20),
+                                Container(
+                                  alignment: Alignment.topRight,
+                                  child:InkWell(
+                                    child: Text(
+                                      "Olvidaste tu contraseña?",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                          color: Color(0xff6B8B59),
+                                          shadows: [
+                                            Shadow(
+                                                color: Colors.grey,
+                                                offset: Offset(0.5,0)
+                                            )
+                                          ]
+                                      ),
                                     ),
                                   ),
                                 ),
+                                espacio_vertical(20),
+                                BottomGreen(50,MediaQuery.of(context).size.width * 0.4,"Iniciar Sesion",loginUser),
+                                espacio_vertical(20),
+                                Container(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text("Aun no tiene una cuenta?"),
+                                        InkWell(
+                                          onTap: (){
+                                            Navigator.pushNamed(context,"/");
+                                          },
+                                          child: Text(
+                                            "Registrarse",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Color(0xff6B8B59)
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                ),
                               ],
                             )
-                        ),
-                      ],
-                    )
-                ))
-          ],
-        ),
-      ) ,
+                        ))
+                  ],
+                ),
+              );
+            }
+        )
+      )
     );
 }
 
 void  loginUser(){
   //Si la validacion es exitosa
-  validarLogin();
   if (keyform_login.currentState.validate()){
     print("Aceptable");
     validarLogin();
+    Navigator.pushNamed(context,"edit_user");
   }
   else{
     print("Error con la validacion");
   }
 }
 
-  void mensaje_exito(@required BuildContext context,String mensaje){
+void mensaje(@required BuildContext context,String mensaje){
     final snackBar=SnackBar(
       content: Text( mensaje ,
         style: TextStyle(

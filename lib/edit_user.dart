@@ -5,10 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:firebase_flutter/boton_verde.dart';
 
 class EditUserScreen extends StatefulWidget {
-  BuildContext contexto;
   State<EditUserScreen> createState() => EditUserScreenState();
-  EditUserScreen(this.contexto);
-  EditUserScreen.only();
 }
 
 class EditUserScreenState extends State<EditUserScreen> {
@@ -35,37 +32,45 @@ class EditUserScreenState extends State<EditUserScreen> {
 
   @override
   Widget build(BuildContext context) {
-        return SingleChildScrollView(
-          child:Column(
-            children: [
-              Stack(
-                children: [
-                  Container(
-                    color: Colors.black,
-                    height: MediaQuery.of(widget.contexto).size.height *0.25,
-                  )
-                ],
-              ),
-              Form(
-                    child: Container(
-                      width: MediaQuery.of(widget.contexto).size.width*0.9,
-                        alignment: Alignment.center,
+        return Scaffold(
+            body: SizedBox(
+                child: Builder(
+                    builder: (BuildContext context){
+                      return SingleChildScrollView(
                         child:Column(
-                        children: [
-                          subtitle("Informacion de Usuario"),
-                          informacion_user(),
-                          espacio_vertical(10),
-                          BottomGreen(50, MediaQuery.of(context).size.width * 0.4,"Guardar Cambios", () { }),
-                          subtitle("Cambio de Contraseña"),
-                          container_password(),
-                          espacio_vertical(10),
-                        ],
-                      )
-                    )
-              )
-            ],
-          )
-          ,
+                          children: [
+                            Stack(
+                              children: [
+                                Container(
+                                  color: Colors.black,
+                                  height: MediaQuery.of(context).size.height *0.25,
+                                )
+                              ],
+                            ),
+                            Form(
+                                child: Container(
+                                    width: MediaQuery.of(context).size.width*0.9,
+                                    alignment: Alignment.center,
+                                    child:Column(
+                                      children: [
+                                        subtitle("Informacion de Usuario"),
+                                        informacion_user(),
+                                        espacio_vertical(10),
+                                        BottomGreen(50, MediaQuery.of(context).size.width * 0.4,"Guardar Cambios", () { }),
+                                        subtitle("Cambio de Contraseña"),
+                                        container_password(),
+                                        espacio_vertical(10),
+                                      ],
+                                    )
+                                )
+                            )
+                          ],
+                        )
+                        ,
+                      );
+                    }
+                )
+            )
         );
   }
   Widget espacio_vertical(double alto){

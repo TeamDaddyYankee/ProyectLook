@@ -7,7 +7,6 @@ import 'package:firebase_flutter/boton_verde.dart';
 class RegisterScreen extends StatefulWidget {
   BuildContext contexto;
   State<RegisterScreen> createState() => RegisterScreenState();
-
   RegisterScreen(this.contexto);
   RegisterScreen.only();
 }
@@ -85,7 +84,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                                       Text("Ya tiene una cuenta? "),
                                       InkWell(
                                         onTap: (){
-                                          Navigator.pushNamed(context, "login_user");
+                                          Navigator.pushNamed(context,"login_user");
                                         },
                                         child: Text(
                                           "Iniciar Sesion",
