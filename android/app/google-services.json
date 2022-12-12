@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "847332022661",
-    "project_id": "probandofirebase-b3949",
-    "storage_bucket": "probandofirebase-b3949.appspot.com"
+    "project_number": "521264242589",
+    "project_id": "proyectolook-44695",
+    "storage_bucket": "proyectolook-44695.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:847332022661:android:8db762a2362e64be094cec",
+        "mobilesdk_app_id": "1:521264242589:android:c5c19e2a027e57bdf91974",
         "android_client_info": {
           "package_name": "com.example.firebase_flutter"
         }
       },
       "oauth_client": [
         {
-          "client_id": "847332022661-vhj79g07hnvc237qceo02os2k5uqk7mh.apps.googleusercontent.com",
+          "client_id": "521264242589-t0qt3um8hjkunptoolp2g1s3l3t6va1n.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCFK9ttT83AgGaae8OLOCpJVtyuenoHX0Q"
+          "current_key": "AIzaSyDrJNBcWtnMvfC9iB9FxI4k4eZ6rbOc15c"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "847332022661-vhj79g07hnvc237qceo02os2k5uqk7mh.apps.googleusercontent.com",
+              "client_id": "521264242589-t0qt3um8hjkunptoolp2g1s3l3t6va1n.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
