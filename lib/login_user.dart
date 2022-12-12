@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_flutter/boton_verde.dart';
 import 'package:firebase_flutter/edit_user.dart';
 import 'package:firebase_flutter/User.dart';
+import 'package:firebase_flutter/Usuarios_BaseDatos.dart';
 
 class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => LoginScreenState();
@@ -18,14 +20,28 @@ class LoginScreenState extends State<LoginScreen> {
 
 
   validarLogin()async{
-    String user_logueado;
+    User user_logueado;
     bool exist_email=false;
     bool valid_contra=false;
     try{
-      CollectionReference ref=FirebaseFirestore.instance.collection("Usuarios");
-      QuerySnapshot usuarios = await ref.get();
+      UsuariosBD bd_user=UsuariosBD();
+      //CollectionReference ref=FirebaseFirestore.instance.collection("Usuarios");
+     QuerySnapshot usuarios = await bd_user.usuariosRef.get();
       //Si hay usuarios
       if(usuarios.docs.length!=0){
+        //Si el email existe
+        User validLoginUser=await bd_user.getByEmail(email.text);
+        //Si existe el user con el email escrito
+        if(validLoginUser != null){
+          exist_email=true;
+          if(validLoginUser.contra==contra.text){
+            valid_contra=true;
+            user_logueado=validLoginUser;
+          }
+        }
+
+
+        /*
         for(var userdoc in usuarios.docs){
           //Comprobamos si el email existe ,con cada uno de los docs existentes
           if(userdoc.get("email") == email.text ){
@@ -41,15 +57,16 @@ class LoginScreenState extends State<LoginScreen> {
             }
           }
         }//for
+        */
 
         if(exist_email){
          if(valid_contra){
            email.clear();
            contra.clear();
-           Navigator.pushNamed(context,"edit_user",arguments: User(user_logueado));
+           Navigator.pushNamed(context,"edit_user",arguments:user_logueado);
          }
          else{
-           mensaje(context_scaffold,"La contraseña ingresada es incorrecta");
+            mensaje(context_scaffold,"La contraseña ingresada es incorrecta");
          }
         }
         else{
@@ -173,10 +190,10 @@ void  loginUser(){
   }
 }
 
-void mensaje(@required BuildContext context,String mensaje){
+void mensaje( BuildContext context,String mensaje){
     final snackBar=SnackBar(
       content: Text( mensaje ,
-        style: TextStyle(
+        style:  TextStyle(
             color: Colors.black87
         ),
       ),
