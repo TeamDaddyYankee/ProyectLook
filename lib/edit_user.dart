@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:firebase_flutter/boton_verde.dart';
 import 'package:firebase_flutter/User.dart';
 import 'package:firebase_flutter/Usuarios_BaseDatos.dart';
+import 'package:firebase_flutter/validate.dart';
 
 class EditUserScreen extends StatefulWidget {
 
@@ -19,6 +20,8 @@ class EditUserScreenState extends State<EditUserScreen> {
   TextEditingController movil=TextEditingController();
   TextEditingController contra=TextEditingController();
   TextEditingController contra_actual=TextEditingController();
+  ValidateField validate=ValidateField();
+  BuildContext context_scafold;
   final keyform_informacion = GlobalKey<FormState>();
   final keyform_cambioContra = GlobalKey<FormState>();
   bool contra_invisible = false;
@@ -45,7 +48,8 @@ class EditUserScreenState extends State<EditUserScreen> {
         return Scaffold(
             body: SizedBox(
                 child: Builder(
-                    builder: (BuildContext context){
+                    builder: (BuildContext contextscaffold){
+                      context_scafold = contextscaffold;
                       return SingleChildScrollView(
                         child:Column(
                           children: [
@@ -118,7 +122,7 @@ class EditUserScreenState extends State<EditUserScreen> {
         user_conectado.setEmail(email.text);
         user_conectado.setMovil(movil.text);
         await userUpdate.updateUser(user_conectado.id_doc,user_conectado.toMap());
-        print("Usuario Actualizado");
+        mensaje("Datos actualizados con exito");
   }
 
   actualizarContra()async{
@@ -127,12 +131,25 @@ class EditUserScreenState extends State<EditUserScreen> {
       if(user_conectado.getContra()==contra.text){
         user_conectado.setContra(contra_actual.text);
         await userUpdate.updateUser(user_conectado.id_doc,user_conectado.toMap());
-        print("Contraseña cambiada");
+        mensaje("Contraseña actualizada con exito");
       }
       else{
-        //La contra es incorrecta
+        mensaje("Contraseña actual ingresada es incorrecta");
       }
 
+  }
+
+  void mensaje(String mensaje){
+    final snackBar=SnackBar(
+      content: Text(mensaje,
+        style: TextStyle(
+            color: Colors.black87
+        ),
+      ),
+      duration: Duration(seconds: 2),
+      backgroundColor:Color(0xff6B8B59),
+    );
+    ScaffoldMessenger.of(context_scafold).showSnackBar(snackBar);
   }
 
 
@@ -197,11 +214,11 @@ class EditUserScreenState extends State<EditUserScreen> {
               ],
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
             ),
-            dato_user("Nombre Usuario",usuario),
+            dato_user("Nombre Usuario",usuario,validate.validarNombreUser),
             espacio_vertical(7),
-            dato_user("Email",email),
+            dato_user("Email",email,validate.validarEmail),
             espacio_vertical(7),
-            dato_user("Movil",movil),
+            dato_user("Movil",movil,validate.validarTelefono),
             espacio_vertical(5),
           ],
         ),
@@ -213,8 +230,11 @@ class EditUserScreenState extends State<EditUserScreen> {
   }
 
 
-  Widget dato_user(String dato,TextEditingController controlador){
+  Widget dato_user(String dato,TextEditingController controlador,Function funcionValidate){
     return TextFormField(
+      validator: (value){
+        return funcionValidate(value);
+      },
       enabled: enabled_usuario,
       controller:controlador,
       decoration: InputDecoration(
@@ -282,6 +302,9 @@ class EditUserScreenState extends State<EditUserScreen> {
 
   Widget password(String valor,String dato,TextEditingController controlador){
     return TextFormField(
+      validator: (value){
+        return validate.validarContra(value);
+      },
       controller:controlador,
       obscureText: contra_invisible,
       decoration: InputDecoration(

@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_flutter/boton_verde.dart';
+import 'package:firebase_flutter/validate.dart';
 
 class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => RegisterScreenState();
@@ -13,6 +14,7 @@ class RegisterScreenState extends State<RegisterScreen> {
   TextEditingController email=TextEditingController();
   TextEditingController contra=TextEditingController();
   TextEditingController movil=TextEditingController();
+  ValidateField validate=ValidateField();
   final firestore=FirebaseFirestore.instance;
   final _keyform = GlobalKey<FormState>();
   bool contra_visible = true;
@@ -78,7 +80,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text("Ya tiene una cuenta? "),
+                                      Text("Ya tiene una cuenta?"),
                                       InkWell(
                                         onTap: (){
                                           Navigator.pushNamed(context,"login_user");
@@ -117,15 +119,15 @@ class RegisterScreenState extends State<RegisterScreen> {
         for(var userdoc in usuarios.docs){
           //Si existe un usuario con el mismo nombre
           if(userdoc.get("nombreUser")==usuario.text){
-            mensaje(context_scafold,"El usuario ingresado ya existe");
+            mensaje("El usuario ingresado ya existe");
             break;
           }
           else if(userdoc.get("email")==email.text){
-            mensaje(context_scafold,"El email ingresado ya existe");
+            mensaje("El email ingresado ya existe");
             break;
           }
           else if(userdoc.get("movil")==movil.text){
-            mensaje(context_scafold,"El numero de celular ingresado ya existe");
+            mensaje("El numero de celular ingresado ya existe");
             break;
           }
           else{
@@ -159,70 +161,11 @@ class RegisterScreenState extends State<RegisterScreen> {
       contra.clear();
       movil.clear();
       print("Registrado con Exito");
-      mensaje(context_scafold,"Registrado con exito! Bienvenido!");
+      mensaje("Registrado con exito! Bienvenido!");
       Navigator.pushNamed(context, "login_user");
     }
   }
 
-
-
-  final alphanumeric = RegExp(r'^[a-zA-Z0-9]+$');
-String validarUsuario(String valor){
-  if(valor.isEmpty){
-    return "Porfavor ingrese un nombre de usuario";
-  }
-  //Si hay otras validaciones lo ingresas como otras condiciones
-  if(valor.length < 5){
-    return "El nombre de usuario debe tener 5 o mas caracteres";
-  }
-  if(!alphanumeric.hasMatch(valor)){
-    return "El nombre de usuario solo debe contener digitos alfanumericos";
-  }
-
-  return null;
-}
-
- final RegExp _movilRegExp= RegExp(r"^\d{9}$");
-
-  String validarTelefono(String value){
-    if(value.isEmpty){
-      return "Pofavor ingrese un numero de celular";
-    }
-    if(value[0] != "9") {
-      return "El numero ingresado debe empezar con 9";
-    }
-  if(value.length != 9){
-      return "El formato del numero de celular es de 9 digitos";
-  }
-
-  if(!_movilRegExp.hasMatch(value)){
-    //print(_movilRegExp.hasMatch(value));
-    return "El numero ingresado solo debe contener digitos numericos";
-  }
-  return null;
-  }
-
-  final RegExp _emailRegExp = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9\-\_]+(\.[a-zA-Z]+)*$");
-  String validarEmail(String value){
-    if(value.isEmpty){
-      return "Porfavor ingrese un correo electronico";
-    }
-    if(!_emailRegExp.hasMatch(value.toLowerCase())){
-      return "El correo ingresado no cumple con el formato";
-    }
-    return null;
-  }
-
-
-  String validarContra(String value){
-    if(value.isEmpty){
-      return "Pofavor ingrese una contraseña";
-    }
-    if(value.length < 9){
-      return "La contraseña debe contener 9 o mas caracteres";
-    }
-    return null;
-  }
 
 Widget terminos(){
     return  Container(
@@ -247,7 +190,7 @@ Widget espacio_horizontal(double ancho){
     );
 }
 
-void mensaje(@required BuildContext context,String mensaje){
+void mensaje(String mensaje){
   final snackBar=SnackBar(
     content: Text(mensaje,
     style: TextStyle(
@@ -257,7 +200,7 @@ void mensaje(@required BuildContext context,String mensaje){
     duration: Duration(seconds: 2),
     backgroundColor:Color(0xff6B8B59),
   );
-  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  ScaffoldMessenger.of(context_scafold).showSnackBar(snackBar);
 }
 
 
@@ -266,7 +209,7 @@ Widget _usuario() {
       TextFormField(
           controller: usuario,
           validator: (value) {
-            return validarUsuario(value);
+            return validate.validarNombreUser(value);
           },
         decoration: InputDecoration(
           contentPadding: EdgeInsets.all(8),
@@ -303,7 +246,7 @@ Widget _usuario() {
         controller: movil,
         keyboardType: TextInputType.phone,
         validator: (value){
-          return validarTelefono(value);
+          return validate.validarTelefono(value);
         },
           decoration: InputDecoration(
               contentPadding: EdgeInsets.all(8),
@@ -339,7 +282,7 @@ Widget _usuario() {
       TextFormField(
         controller: email,
         validator: (value){
-          return validarEmail(value);
+          return validate.validarEmail(value);
         },
           decoration: InputDecoration(
               contentPadding: EdgeInsets.all(8),
@@ -375,7 +318,7 @@ Widget _usuario() {
       TextFormField(
         controller: contra,
         validator: (value){
-          return(validarContra(value));
+          return validate.validarContra(value);
         },
          obscureText: contra_visible,
           decoration: InputDecoration(

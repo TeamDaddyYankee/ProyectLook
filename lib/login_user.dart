@@ -3,9 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_flutter/boton_verde.dart';
-import 'package:firebase_flutter/edit_user.dart';
 import 'package:firebase_flutter/User.dart';
 import 'package:firebase_flutter/Usuarios_BaseDatos.dart';
+import 'package:firebase_flutter/validate.dart';
+
 
 class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => LoginScreenState();
@@ -14,6 +15,7 @@ class LoginScreen extends StatefulWidget {
 class LoginScreenState extends State<LoginScreen> {
   TextEditingController contra=TextEditingController();
   TextEditingController email=TextEditingController();
+  ValidateField validate=ValidateField();
   final keyform_login = GlobalKey<FormState>();
   bool contra_visible = true;
   BuildContext context_scaffold;
@@ -39,26 +41,6 @@ class LoginScreenState extends State<LoginScreen> {
             user_logueado=validLoginUser;
           }
         }
-
-
-        /*
-        for(var userdoc in usuarios.docs){
-          //Comprobamos si el email existe ,con cada uno de los docs existentes
-          if(userdoc.get("email") == email.text ){
-            exist_email=true;//El email existe en la base de datos
-            //Si el email existe comprobamos su contraseña
-            if(userdoc.get("password") == contra.text){
-              valid_contra=true;//El usuario existe
-              user_logueado=userdoc.id;//Key del Documento
-              break;
-            }
-            else{
-              break;
-            }
-          }
-        }//for
-        */
-
         if(exist_email){
          if(valid_contra){
            email.clear();
@@ -66,14 +48,13 @@ class LoginScreenState extends State<LoginScreen> {
            Navigator.pushNamed(context,"edit_user",arguments:user_logueado);
          }
          else{
-            mensaje(context_scaffold,"La contraseña ingresada es incorrecta");
+            mensaje("La contraseña ingresada es incorrecta");
          }
         }
         else{
-          mensaje(context_scaffold,"El email ingresado no existe como registrado");
+          mensaje("El email ingresado no existe como registrado");
         }
       }
-
     }
     catch(e){
         print("Error .... ${e.toString()}");
@@ -190,7 +171,7 @@ void  loginUser(){
   }
 }
 
-void mensaje( BuildContext context,String mensaje){
+void mensaje(String mensaje){
     final snackBar=SnackBar(
       content: Text( mensaje ,
         style:  TextStyle(
@@ -200,29 +181,9 @@ void mensaje( BuildContext context,String mensaje){
       duration: Duration(seconds: 2),
       backgroundColor:Color(0xff6B8B59),
     );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context_scaffold).showSnackBar(snackBar);
   }
 
-
-  final RegExp _emailRegExp = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9\-\_]+(\.[a-zA-Z]+)*$");
-  String validarEmail(String value){
-    if(value.isEmpty){
-      return "Porfavor ingrese un correo electronico";
-    }
-    if(!_emailRegExp.hasMatch(value.toLowerCase())){
-      return "El correo ingresado no cumple con el formato";
-    }
-    return null;
-  }
-  String validarContra(String value){
-    if(value.isEmpty){
-      return "Pofavor ingrese una contraseña";
-    }
-    if(value.length < 9){
-      return "La contraseña debe contener 9 o mas caracteres";
-    }
-    return null;
-  }
 
   Widget espacio_vertical(double alto){
     return SizedBox(
@@ -239,7 +200,7 @@ void mensaje( BuildContext context,String mensaje){
     return
       TextFormField(
           validator: (value){
-            return validarEmail(value);
+            return validate.validarEmail(value);
           },
         controller: email,
           decoration: InputDecoration(
@@ -276,7 +237,7 @@ void mensaje( BuildContext context,String mensaje){
     return
       TextFormField(
         validator: (value){
-          return validarContra(value);
+          return validate.validarContra(value);
         },
         obscureText: contra_visible,
         controller: contra,
