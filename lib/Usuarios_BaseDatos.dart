@@ -48,6 +48,22 @@ class UsuariosBD{
   }
 
 
+  Future<bool> existData(String bdfield,String data) async{
+    //Usuarios de la base de datos con la data indicada en el campo field indicado
+    QuerySnapshot users=await usuariosRef.where(bdfield,isEqualTo: data).get();
+    //Si existe un usuario con el dato dado
+    if(users.docs.length!=0){
+      return true;
+    }
+    //Si es cero es pq no hay ningun usuario con el dato dado
+    else{
+      return false;
+    }
+  }
+
+
+
+
 
 
 }

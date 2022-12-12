@@ -28,7 +28,7 @@ class ValidateField{
       return "El formato del numero de celular es de 9 digitos";
     }
 
-    if(!movilRegExp.hasMatch(value)){
+    if(!movilRegExp.hasMatch(value.toLowerCase())){
       //print(_movilRegExp.hasMatch(value));
       return "El numero ingresado solo debe contener digitos numericos";
     }

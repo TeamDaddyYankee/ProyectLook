@@ -21,45 +21,6 @@ class LoginScreenState extends State<LoginScreen> {
   BuildContext context_scaffold;
 
 
-  validarLogin()async{
-    User user_logueado;
-    bool exist_email=false;
-    bool valid_contra=false;
-    try{
-      UsuariosBD bd_user=UsuariosBD();
-      //CollectionReference ref=FirebaseFirestore.instance.collection("Usuarios");
-     QuerySnapshot usuarios = await bd_user.usuariosRef.get();
-      //Si hay usuarios
-      if(usuarios.docs.length!=0){
-        //Si el email existe
-        User validLoginUser=await bd_user.getByEmail(email.text);
-        //Si existe el user con el email escrito
-        if(validLoginUser != null){
-          exist_email=true;
-          if(validLoginUser.contra==contra.text){
-            valid_contra=true;
-            user_logueado=validLoginUser;
-          }
-        }
-        if(exist_email){
-         if(valid_contra){
-           email.clear();
-           contra.clear();
-           Navigator.pushNamed(context,"edit_user",arguments:user_logueado);
-         }
-         else{
-            mensaje("La contraseña ingresada es incorrecta");
-         }
-        }
-        else{
-          mensaje("El email ingresado no existe como registrado");
-        }
-      }
-    }
-    catch(e){
-        print("Error .... ${e.toString()}");
-    }
-  }
 
 
   @override
@@ -159,6 +120,46 @@ class LoginScreenState extends State<LoginScreen> {
       )
     );
 }
+
+ validarLogin() async{
+    User user_logueado;
+    bool exist_email=false;
+    bool valid_contra=false;
+    try{
+      UsuariosBD bd_user=UsuariosBD();
+      QuerySnapshot usuarios = await bd_user.usuariosRef.get();
+      //Si hay usuarios
+      if(usuarios.docs.length!=0){
+        //Si el email existe
+        User validLoginUser=await bd_user.getByEmail(email.text);
+        //Si existe el user con el email escrito
+        if(validLoginUser != null){
+          exist_email=true;
+          if(validLoginUser.contra==contra.text){
+            valid_contra=true;
+            user_logueado=validLoginUser;
+          }
+        }
+        if(exist_email){
+          if(valid_contra){
+            email.clear();
+            contra.clear();
+            Navigator.pushNamed(context,"edit_user",arguments:user_logueado);
+          }
+          else{
+            mensaje("La contraseña ingresada es incorrecta");
+          }
+        }
+        else{
+          mensaje("El email ingresado no existe como registrado");
+        }
+      }
+    }
+    catch(e){
+      print("Error .... ${e.toString()}");
+    }
+  }
+
 
 void  loginUser(){
   //Si la validacion es exitosa

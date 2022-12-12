@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_flutter/boton_verde.dart';
 import 'package:firebase_flutter/validate.dart';
+import 'package:firebase_flutter/User.dart';
+import 'package:firebase_flutter/Usuarios_BaseDatos.dart';
 
 class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => RegisterScreenState();
@@ -111,40 +113,37 @@ class RegisterScreenState extends State<RegisterScreen> {
   }
 
   validarRegistro()async{
-    bool valido=false;
     try{
-      CollectionReference ref=FirebaseFirestore.instance.collection("Usuarios");
-      QuerySnapshot usuarios = await ref.get();
+      UsuariosBD bd_user=UsuariosBD();
+      QuerySnapshot usuarios = await bd_user.usuariosRef.get();
       if(usuarios.docs.length!=0){
-        for(var userdoc in usuarios.docs){
-          //Si existe un usuario con el mismo nombre
-          if(userdoc.get("nombreUser")==usuario.text){
-            mensaje("El usuario ingresado ya existe");
-            break;
-          }
-          else if(userdoc.get("email")==email.text){
-            mensaje("El email ingresado ya existe");
-            break;
-          }
-          else if(userdoc.get("movil")==movil.text){
-            mensaje("El numero de celular ingresado ya existe");
-            break;
-          }
-          else{
-            valido=true;
-          }
+        //Si ya existe un usuario con el nombre indicado
+        if(await bd_user.existData("nombreUser", usuario.text)){
+          mensaje("${usuario.text} ya existe");
         }
-      }
-      if(valido){
-        //Ingresamos los datos del usuario a la base de datos
-        await firestore.collection("Usuarios").doc().set(
-            {
-              "nombreUser":usuario.text,
-              "email" : email.text,
-              "password":contra.text,
-              "movil" : movil.text
-            }
-        );
+        //Si no existe un usuario con el nombre indicado
+        else{
+          //Si ya existe un usuario con el email indicado
+           if(await bd_user.existData("email", email.text)){
+             mensaje("El email ingresado ya esta usado");
+           }
+           else{
+             if(await bd_user.existData("movil", movil.text)){
+               mensaje("El numero de celular ingresado ya esta usado");
+             }
+             //Las comprobaciones se realizaron con exito ,se registra al usuario
+             else{
+               User user_registrado=User.datos(usuario.text, email.text, movil.text, contra.text);
+               await bd_user.createUser(user_registrado);
+               mensaje("Registrado con exito! Bienvenido!");
+                usuario.clear();
+                email.clear();
+                contra.clear();
+                movil.clear();
+               Navigator.pushNamed(context, "login_user");
+             }
+           }
+        }
       }
     }
     catch(e){
@@ -156,13 +155,7 @@ class RegisterScreenState extends State<RegisterScreen> {
   void registerUser(){
     if (_keyform.currentState.validate()){
       validarRegistro();
-      usuario.clear();
-      email.clear();
-      contra.clear();
-      movil.clear();
       print("Registrado con Exito");
-      mensaje("Registrado con exito! Bienvenido!");
-      Navigator.pushNamed(context, "login_user");
     }
   }
 
