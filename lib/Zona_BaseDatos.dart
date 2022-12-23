@@ -6,7 +6,9 @@ class ZonaBD {
 
 //Agregar un usuario a la base de datos
   Future<void> createZona(Zona zona) async {
+
     await zonaref.add(zona.toMap());
+
   }
 
   Future<void> updateZona(String iddoc, Map<String, dynamic> datos) async {

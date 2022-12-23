@@ -8,7 +8,8 @@ class Zona{
      int ubigeo;
      int numAsaltos;
 
-    Zona(this.id_doc);
+    Zona();
+    Zona.id(this.id_doc);
     Zona.datos(this.distrito,this.horarioFrecuente,this.id_user,this.modalidadFrecuente,this.nombreLugar);
 
     //Convierte al usuario en un map para la base de datos
