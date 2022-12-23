@@ -1,9 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.firebase_flutter">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="firebase_flutter"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+       <meta-data android:name="com.google.android.geo.API_KEY"
+           android:value="AIzaSyBsJM3lWMbK44PGFXTjOMNKukVTVTV8D6c"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

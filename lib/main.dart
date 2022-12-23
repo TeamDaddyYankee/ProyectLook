@@ -8,6 +8,7 @@ import 'package:firebase_flutter/incident_register.dart';
 import 'package:firebase_flutter/edit_user.dart';
 
 
+
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
