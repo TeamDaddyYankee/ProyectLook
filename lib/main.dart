@@ -6,6 +6,7 @@ import 'package:firebase_flutter/avatar_user.dart';
 import 'package:firebase_flutter/text_user.dart';
 import 'package:firebase_flutter/incident_register.dart';
 import 'package:firebase_flutter/edit_user.dart';
+import 'package:firebase_flutter/crud_incidencia.dart';
 import 'package:firebase_flutter/crud_zona.dart';
 
 
@@ -25,12 +26,13 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,),
-      initialRoute: "crud_zona"  ,
+      initialRoute: "incident"  ,
       routes: {
         "/" : (context) =>  RegisterScreen(),
         "edit_user" : (context) => EditUserScreen(),
         "login_user" : (context) => LoginScreen(),
         "crud_zona" : (context) => ZonaCrud(),
+        "incident" : (context) => RoboCrud(),
       },
       //home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );

@@ -16,84 +16,85 @@ class IncidentRegisterState extends State<IncidentRegister> {
   String monto_perdido;
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child:Column(
-        children: [
-          Stack(
+    return
+      Scaffold(
+      body: SingleChildScrollView(
+          child:Column(
             children: [
-              Positioned(
-                  child: Column(
-                    children: [
-                      Container(
-                        color: Colors.black,
-                        height: 150,
-                      ),
-                      SizedBox(
-                        height: 42,
-                        //color: Colors.grey,
-                      ),
-                    ],
-                  )
-              ),
-              Positioned(
-                  top: 30,
-                  right: 30,
-                  left: 30,
-                  child: Center(
-                    child:Container(
-                      width: MediaQuery.of(context).size.width*0.85,
-                      child:Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextUser(),
-                          AvatarUser(),
-                        ],
-                      ) ,
-                    )
-                    ,
-                  )
-              ),
-              Positioned(
-                  top: 70,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    child:Center(
-                      child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 60,
-                        child: CircleAvatar(
-                          backgroundImage: AssetImage("assets/look_aguila.png"),
-                          radius: 58,
-                        ),
-                      ),
-                    ),
-                  )
-              )
-
-            ],
-          ),
-          Form(
-              child: Container(
-              width: MediaQuery.of(context).size.width*0.9,
-              child:Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+              Stack(
                 children: [
-                  containerAgraviado(),
-                  SizedBox(
-                    height: 5,
+                  Positioned(
+                      child: Column(
+                        children: [
+                          Container(
+                            color: Colors.black,
+                            height: 150,
+                          ),
+                          SizedBox(
+                            height: 42,
+                            //color: Colors.grey,
+                          ),
+                        ],
+                      )
                   ),
-                  containerAsalto(),
+                  Positioned(
+                      top: 30,
+                      right: 30,
+                      left: 30,
+                      child: Center(
+                        child:Container(
+                          width: MediaQuery.of(context).size.width*0.85,
+                          child:Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextUser(),
+                              AvatarUser(),
+                            ],
+                          ) ,
+                        )
+                        ,
+                      )
+                  ),
+                  Positioned(
+                      top: 70,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        child:Center(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 60,
+                            child: CircleAvatar(
+                              backgroundImage: AssetImage("assets/look_aguila.png"),
+                              radius: 58,
+                            ),
+                          ),
+                        ),
+                      )
+                  )
 
                 ],
-              ) ,
-              )
-          )
-        ],
+              ),
+              Form(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width*0.9,
+                    child:Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        containerAgraviado(),
+                        containerAsalto(),
 
-      )
-    );
+                      ],
+                    ) ,
+                  )
+              )
+            ],
+
+          )
+      ),
+      );
 
   }
+
   Widget addAgraviado(){
     return Container(
       margin: EdgeInsets.only(top:5),
@@ -113,7 +114,8 @@ class IncidentRegisterState extends State<IncidentRegister> {
             mainAxisSize: MainAxisSize.min,
             children: [
               //_genero(),
-              _edad_genero()
+              _edad_genero(),
+
             ],
 
           ),
@@ -123,6 +125,7 @@ class IncidentRegisterState extends State<IncidentRegister> {
       ),
     );
   }
+
 
 
   Widget _edad_genero() {
@@ -152,34 +155,24 @@ class IncidentRegisterState extends State<IncidentRegister> {
           width: 5,
         ),
         Expanded(child:
-          Container(
-            width: 50,
-            padding: EdgeInsets.all(2),
-            //margin: EdgeInsets.only(top: 20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.black87,
-                 width: 0.5,
-                style: BorderStyle.solid
-                 )
+            Container(
+              //margin: EdgeInsets.only(top: 20),
+              child: TextFormField(
+              decoration:  InputDecoration(
+                contentPadding: EdgeInsets.all(17),
+                hintText: 'Genero',
+                label: Text("Genero"),
+                hintStyle: TextStyle(color:Colors.black87),
+                border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                color: Colors.black87,
+                )
+               )
               ),
-          
-          child: DropdownButton(
-            onChanged: null,
-            hint: Text(
-                "Seleccione su genero",
             ),
-            items: <String>["Hombre","Mujer","Otro"].map((String select) {
-              return DropdownMenuItem(
-                value: select,
-                child: Text(
-                    select
-                ),
-              );
-            }).toList(),
-          ) ,
-        ))
-
+              )
+        )
 
 
     ],
@@ -227,7 +220,7 @@ class IncidentRegisterState extends State<IncidentRegister> {
               ]
             ),
           ),
-          addAgraviado()
+          addAgraviado(),
         ],
       ),
     );
@@ -237,7 +230,11 @@ class IncidentRegisterState extends State<IncidentRegister> {
     return Container(
       child: Column(
         children: [
+          Text(
+            "Datos sobre la perdida",
+          ),
           Container(
+
             decoration: BoxDecoration(
                 border: Border(
                     bottom: BorderSide(
@@ -249,9 +246,7 @@ class IncidentRegisterState extends State<IncidentRegister> {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Datos sobre la perdida",
-                  ),
+
                   Column(
                     children: [
                       Text(
