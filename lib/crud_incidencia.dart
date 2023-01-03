@@ -5,13 +5,21 @@ import 'package:firebase_flutter/Incidencia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_flutter/Incidencia_BaseDatos.dart';
 import 'package:firebase_flutter/boton_verde.dart';
-
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class RoboCrud extends StatefulWidget {
   State<RoboCrud> createState() => RoboCrudState();
 }
 
 class RoboCrudState extends State<RoboCrud> {
+
+  CameraPosition _posicionInicial =
+  CameraPosition(target: LatLng(-12.046130, -77.030686), zoom: 11.0);
+
+  GoogleMapController _controllerMap;
+  LatLng _ultimoTap=LatLng(-12.046130, -77.030686);
+
+
   TextEditingController id_robo = TextEditingController();
   List<TextEditingController> generos=[TextEditingController()];//Por defecto 1 agraviado
   List<TextEditingController> edades =[TextEditingController()];
@@ -48,8 +56,8 @@ class RoboCrudState extends State<RoboCrud> {
       robonuevo.modalidad=modalidad.text;
       robonuevo.numAtacantes=int.parse(numAtacantes.text);
       robonuevo.monto=double.parse(monto.text);
-      robonuevo.ubicacionx=double.parse(ubicacionx.text);
-      robonuevo.ubicaciony=double.parse(ubicaciony.text);
+      robonuevo.ubicacionx=_ultimoTap.latitude;
+      robonuevo.ubicaciony=_ultimoTap.longitude;
 
 
       await bd_robo.createRobo(robonuevo);
@@ -151,6 +159,7 @@ class RoboCrudState extends State<RoboCrud> {
       print("No es posbile eliminar agraviados");
     }
   }
+
 
   void nuevoPertenencia(){
     //Agregando un controlador por cada nuevo agraviado
@@ -573,25 +582,80 @@ class RoboCrudState extends State<RoboCrud> {
 
   @override
   Widget build(BuildContext context) {
+    final GoogleMap googleMap = GoogleMap(
+      markers: {
+        Marker(
+          markerId: MarkerId("ZonaRobo"),
+          position: _ultimoTap ,
+        )
+      },
+      onMapCreated: onMapCreated,
+      initialCameraPosition: _posicionInicial,
+      onTap: (LatLng pos) {
+        setState(() {
+          _ultimoTap = pos;
+        });
+      },
+    );
+
+    final List<Widget> columnChildren = <Widget>[
+      Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Center(
+          child: SizedBox(
+            width: 500.0,
+            height: 400.0,
+            child: googleMap,
+          ),
+        ),
+      ),
+    ];
+
+
+    void irZona(){
+      Navigator.pushNamed(context,"consult");
+    }
+
     return Scaffold(
         body: SingleChildScrollView(
             child: Column(
               children: [
+                SizedBox(
+                  height: 10,
+                ),
                 subtitle("Registrar Robo"),
                 containerAgraviado(),
                 containerRobo(),
                 containerpertenencia(),
-                containerLugar(),
+                //containerLugar(),
+                subtitle("Seleccion Zona Robo"),
+                Container(
+                    child: Column(
+                      children: columnChildren,
+                    ),
+                  ),
                 BottomGreen(
                     50,
                     MediaQuery.of(context).size.width * 0.4,
                     "Registrar Robo",creandoRobo
                 ),
-
-                editar(),
+                SizedBox(height: 10,),
+                BottomGreen(
+                    50,
+                    MediaQuery.of(context).size.width * 0.4,
+                    "Consultar Zona",irZona
+                ),
+                //editar(),
               ],
             ),
+
         )
     );
   }
+  void onMapCreated(GoogleMapController controller) async {
+    setState(() {
+      _controllerMap = controller;
+    });
+  }
+
 }

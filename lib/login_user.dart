@@ -144,7 +144,8 @@ class LoginScreenState extends State<LoginScreen> {
           if(valid_contra){
             email.clear();
             contra.clear();
-            Navigator.pushNamed(context,"edit_user",arguments:user_logueado);
+            Navigator.pushNamed(context,"menu",arguments:user_logueado);
+            //Navigator.pushNamed(context,"edit_user",arguments:user_logueado);
           }
           else{
             mensaje("La contraseña ingresada es incorrecta");

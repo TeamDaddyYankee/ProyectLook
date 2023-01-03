@@ -8,6 +8,8 @@ import 'package:firebase_flutter/incident_register.dart';
 import 'package:firebase_flutter/edit_user.dart';
 import 'package:firebase_flutter/crud_incidencia.dart';
 import 'package:firebase_flutter/crud_zona.dart';
+import 'package:firebase_flutter/consultzona.dart';
+import 'package:firebase_flutter/menu.dart';
 
 
 
@@ -26,13 +28,15 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,),
-      initialRoute: "incident"  ,
+      initialRoute: "menu"  ,
       routes: {
         "/" : (context) =>  RegisterScreen(),
         "edit_user" : (context) => EditUserScreen(),
         "login_user" : (context) => LoginScreen(),
         "crud_zona" : (context) => ZonaCrud(),
         "incident" : (context) => RoboCrud(),
+        "consult" : (context) => ConsultZona(),
+        "menu" : (context) => Menu(),
       },
       //home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
